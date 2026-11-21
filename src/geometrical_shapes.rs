@@ -262,4 +262,18 @@ mod tests {
             assert!(line.1.1 >= 0 && line.1.1 < 200);
         }
     }
+
+    // 3. Test random Circle bounds
+    #[test]
+    fn test_circle_random_bounds() {
+        for _ in 0..100 {
+            let circle = Circle::random(100, 200);
+
+            let x = circle.0.0;
+            let y = circle.0.1;
+
+            assert!(x >= 0 && x < 100);
+            assert!(y >= 0 && y < 200);
+        }
+    }
 }
