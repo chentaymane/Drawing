@@ -26,3 +26,17 @@ impl Point {
         )
     }
 }
+
+impl Drawable for Point {
+    fn draw(&self, image: &mut Image) {
+        image.display(self.0, self.1, self.color());
+    }
+
+    fn color(&self) -> Color {
+        let mut rng = rand::rng();
+        let red = rng.random_range(0..255);
+        let green = rng.random_range(0..255);
+        let blue = rng.random_range(0..255);
+        Color::rgb(red,green,blue)
+    }
+}
