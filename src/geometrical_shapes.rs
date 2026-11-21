@@ -185,3 +185,49 @@ impl Drawable for Rectangle {
         Color::rgb(red,green,blue)
     }
 }
+
+pub struct Circle(
+    pub Point,
+    pub usize
+);
+
+impl Circle {
+    pub fn new(center: &Point, radius: i32) -> Self {
+        Self(center.clone(), radius.clone() as usize)
+    }
+
+    pub fn random(x: i32, y: i32) -> Self {
+        let mut rng = rand::rng();
+        Self::new(&Point::random(x, y), rng.random_range(1..x))
+    }
+}
+
+impl Drawable for Circle {
+    fn draw(&self, image: &mut Image) {
+        let cx = self.0.0 as f64;
+        let cy = self.0.1 as f64;
+        let radius = self.1 as f64;
+
+        let color = self.color();
+        for degree in 0..3600 {
+            let angle = (degree as f64 / 10.0).to_radians();
+
+            let x = cx + radius * angle.cos();
+            let y = cy + radius * angle.sin();
+
+            image.display(
+                x.round() as i32,
+                y.round() as i32,
+                color.clone(),
+            );
+        }
+    }
+
+    fn color(&self) -> Color {
+        let mut rng = rand::rng();
+        let red = rng.random_range(0..=255);
+        let green = rng.random_range(0..=255);
+        let blue = rng.random_range(0..=255);
+        Color::rgb(red,green,blue)
+    }
+}
