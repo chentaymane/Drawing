@@ -248,4 +248,18 @@ mod tests {
             assert!(point.1 >= 0 && point.1 < 200);
         }
     }
+
+    // 2. Test random Line bounds
+    #[test]
+    fn test_line_random_bounds() {
+        for _ in 0..100 {
+            let line = Line::random(100, 200);
+
+            assert!(line.0.0 >= 0 && line.0.0 < 100);
+            assert!(line.0.1 >= 0 && line.0.1 < 200);
+
+            assert!(line.1.0 >= 0 && line.1.0 < 100);
+            assert!(line.1.1 >= 0 && line.1.1 < 200);
+        }
+    }
 }
