@@ -231,3 +231,21 @@ impl Drawable for Circle {
         Color::rgb(red,green,blue)
     }
 }
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // 1. Test random Point bounds
+    #[test]
+    fn test_point_random_bounds() {
+        for _ in 0..100 {
+            let point = Point::random(100, 200);
+
+            assert!(point.0 >= 0 && point.0 < 100);
+            assert!(point.1 >= 0 && point.1 < 200);
+        }
+    }
+}
