@@ -39,3 +39,19 @@ gs::Circle::random(image.width, image.height).draw(&mut image);
 ```
 
 Random points, line endpoints, and circle centers use coordinates in `0..width` and `0..height`. Random circles choose a radius in `1..width`, so they require a width of at least two pixels. All three functions require positive dimensions.
+
+## How rendering works
+
+[src/geometrical_shapes.rs](src/geometrical_shapes.rs) defines every shape and both traits. Each shape implements `Drawable`, with `draw` to render it and `color` to pick a color. A triangle or rectangle picks one color for its entire outline. Separate shapes can occasionally pick the same color.
+
+Lines use Bresenham’s algorithm to visit pixels from the first endpoint through the last. Triangles join three line segments, and rectangles join four. Circles sample their circumference every 0.1 degrees. The `Displayable` implementation for `raster::Image` checks coordinates before writing each pixel, so shapes can extend past the image edges.
+
+[Cargo.toml](Cargo.toml) declares `raster` for pixel storage and PNG output, and `rand` for random coordinates, radii, and colors.
+
+## Run the tests
+
+```sh
+cargo test
+```
+
+The five unit tests in the shape module check random point coordinates, both endpoints of random lines, random circle centers, the four corners of a rectangle constructed in reverse order, and the endpoint values of a line with coincident points. To run just the reversed-corners example, use `cargo test test_rectangle_reversed`.
