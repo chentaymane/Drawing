@@ -105,3 +105,41 @@ impl Drawable for Line {
         Color::rgb(red,green,blue)
     }
 }
+
+pub struct Triangle(
+    pub Point,
+    pub Point,
+    pub Point
+);
+
+impl Triangle {
+    pub fn new(x: &Point, y: &Point, z: &Point) -> Self {
+        let xc: Point = (*x).clone();
+        let yc: Point = (*y).clone();
+        let zc: Point = (*z).clone();
+        Self(xc, yc, zc)
+    }
+}
+
+impl Drawable for Triangle {
+    fn draw(&self, image: &mut Image) {
+        let lines = [
+            Line(self.0.clone(), self.1.clone()),
+            Line(self.1.clone(), self.2.clone()),
+            Line(self.2.clone(), self.0.clone()),
+        ];
+
+        let color = self.color();
+        for line in &lines {
+            line.draw_with_color(image, color.clone());
+        }
+    }
+
+    fn color(&self) -> Color {
+        let mut rng = rand::rng();
+        let red = rng.random_range(0..255);
+        let green = rng.random_range(0..255);
+        let blue = rng.random_range(0..255);
+        Color::rgb(red,green,blue)
+    }
+}
