@@ -276,4 +276,25 @@ mod tests {
             assert!(y >= 0 && y < 200);
         }
     }
+
+    // 4. Test Rectangle with reversed points
+    #[test]
+    fn test_rectangle_reversed() {
+        let rectangle = Rectangle::new(
+            &Point::new(150, 300),
+            &Point::new(50, 60),
+        );
+
+        assert_eq!(rectangle.0.0, 150);
+        assert_eq!(rectangle.0.1, 300);
+
+        assert_eq!(rectangle.1.0, 50);
+        assert_eq!(rectangle.1.1, 300);
+
+        assert_eq!(rectangle.2.0, 50);
+        assert_eq!(rectangle.2.1, 60);
+
+        assert_eq!(rectangle.3.0, 150);
+        assert_eq!(rectangle.3.1, 60);
+    }
 }
