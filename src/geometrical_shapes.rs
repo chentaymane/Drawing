@@ -297,4 +297,15 @@ mod tests {
         assert_eq!(rectangle.3.0, 150);
         assert_eq!(rectangle.3.1, 60);
     }
+
+    // 5. Test Line with identical points
+    #[test]
+    fn test_line_same_point() {
+        let point = Point::new(10, 10);
+
+        let line = Line::new(&point, &point);
+
+        assert_eq!(line.0.0, line.1.0);
+        assert_eq!(line.0.1, line.1.1);
+    }
 }
