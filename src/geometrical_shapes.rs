@@ -234,78 +234,106 @@ impl Drawable for Circle {
 
 
 
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // 1. Test random Point bounds
+    // 1. Random Point inside image
     #[test]
-    fn test_point_random_bounds() {
+    fn test_point_random() {
         for _ in 0..100 {
-            let point = Point::random(100, 200);
+            let p = Point::random(100, 200);
 
-            assert!(point.0 >= 0 && point.0 < 100);
-            assert!(point.1 >= 0 && point.1 < 200);
+            assert!(p.0 >= 0 && p.0 < 100);
+            assert!(p.1 >= 0 && p.1 < 200);
         }
     }
 
-    // 2. Test random Line bounds
+    // 2. Random Line endpoints inside image
     #[test]
-    fn test_line_random_bounds() {
+    fn test_line_random() {
         for _ in 0..100 {
-            let line = Line::random(100, 200);
+            let l = Line::random(100, 200);
 
-            assert!(line.0.0 >= 0 && line.0.0 < 100);
-            assert!(line.0.1 >= 0 && line.0.1 < 200);
+            assert!(l.0.0 >= 0 && l.0.0 < 100);
+            assert!(l.0.1 >= 0 && l.0.1 < 200);
 
-            assert!(line.1.0 >= 0 && line.1.0 < 100);
-            assert!(line.1.1 >= 0 && line.1.1 < 200);
+            assert!(l.1.0 >= 0 && l.1.0 < 100);
+            assert!(l.1.1 >= 0 && l.1.1 < 200);
         }
     }
 
-    // 3. Test random Circle bounds
+    // 3. Random Circle center inside image
     #[test]
-    fn test_circle_random_bounds() {
+    fn test_circle_random() {
         for _ in 0..100 {
-            let circle = Circle::random(100, 200);
+            let c = Circle::random(100, 200);
 
-            let x = circle.0.0;
-            let y = circle.0.1;
-
-            assert!(x >= 0 && x < 100);
-            assert!(y >= 0 && y < 200);
+            assert!(c.0.0 >= 0 && c.0.0 < 100);
+            assert!(c.0.1 >= 0 && c.0.1 < 200);
         }
     }
 
-    // 4. Test Rectangle with reversed points
+    // 4. Rectangle with reversed corners
     #[test]
     fn test_rectangle_reversed() {
-        let rectangle = Rectangle::new(
+        let r = Rectangle::new(
             &Point::new(150, 300),
             &Point::new(50, 60),
         );
 
-        assert_eq!(rectangle.0.0, 150);
-        assert_eq!(rectangle.0.1, 300);
-
-        assert_eq!(rectangle.1.0, 50);
-        assert_eq!(rectangle.1.1, 300);
-
-        assert_eq!(rectangle.2.0, 50);
-        assert_eq!(rectangle.2.1, 60);
-
-        assert_eq!(rectangle.3.0, 150);
-        assert_eq!(rectangle.3.1, 60);
+        assert_eq!((r.0.0, r.0.1), (150, 300));
+        assert_eq!((r.1.0, r.1.1), (50, 300));
+        assert_eq!((r.2.0, r.2.1), (50, 60));
+        assert_eq!((r.3.0, r.3.1), (150, 60));
     }
 
-    // 5. Test Line with identical points
+    // 5. Line with reversed endpoints
+    #[test]
+    fn test_line_reversed() {
+        let l = Line::new(
+            &Point::new(100, 200),
+            &Point::new(10, 20),
+        );
+
+        assert_eq!((l.0.0, l.0.1), (100, 200));
+        assert_eq!((l.1.0, l.1.1), (10, 20));
+    }
+
+    // 6. Triangle with vertices in reverse order
+    #[test]
+    fn test_triangle_reversed() {
+        let t = Triangle::new(
+            &Point::new(100, 100),
+            &Point::new(50, 200),
+            &Point::new(10, 10),
+        );
+
+        assert_eq!((t.0.0, t.0.1), (100, 100));
+        assert_eq!((t.1.0, t.1.1), (50, 200));
+        assert_eq!((t.2.0, t.2.1), (10, 10));
+    }
+
+    // 7. Line with identical start and end
     #[test]
     fn test_line_same_point() {
+        let mut image = Image::blank(20, 20);
         let point = Point::new(10, 10);
+        let red = Color::rgb(255, 0, 0);
 
         let line = Line::new(&point, &point);
 
         assert_eq!(line.0.0, line.1.0);
         assert_eq!(line.0.1, line.1.1);
+
+        // drawing must not loop forever and must color only one pixel
+        line.draw_with_color(&mut image, red.clone());
+
+        let drawn = image.get_pixel(10, 10).unwrap();
+        assert_eq!((drawn.r, drawn.g, drawn.b), (255, 0, 0));
+
+        let untouched = image.get_pixel(11, 10).unwrap();
+        assert_eq!((untouched.r, untouched.g, untouched.b), (0, 0, 0));
     }
 }
